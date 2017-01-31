@@ -1,4 +1,4 @@
-//Clase tarea con marge 1
+
 package modelo;
 
 import bd.BD;
