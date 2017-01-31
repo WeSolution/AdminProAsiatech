@@ -9,7 +9,7 @@ import java.util.*;
 public class Proyecto implements ABCM{
     private String id;
     private String fecha_proyecto;
-    private String descripción;
+    private String descripcion;
     private BD miConexion;
 
     public String getId() {
@@ -28,18 +28,18 @@ public class Proyecto implements ABCM{
         this.fecha_proyecto = fecha_proyecto;
     }
 
-    public String getDescripción() {
-        return descripción;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setDescripción(String descripción) {
-        this.descripción = descripción;
+    public void setDescripcion(String descripción) {
+        this.descripcion = descripción;
     }
 
     public Proyecto(String id, String fecha_proyecto, String descripción) {
         this.id = id;
         this.fecha_proyecto = fecha_proyecto;
-        this.descripción = descripción;
+        this.descripcion = descripción;
         miConexion = new BD();
                 
     }
@@ -62,7 +62,7 @@ public class Proyecto implements ABCM{
             ps = con.prepareStatement(query);
             ps.setString(1, this.id);
             ps.setString(2, this.fecha_proyecto);
-            ps.setString(3, this.descripción);
+            ps.setString(3, this.descripcion);
             ps.executeUpdate();
             band = true;   
             
@@ -183,7 +183,7 @@ public class Proyecto implements ABCM{
             ps = con.prepareStatement(query);
             ps.setString(1, this.id);
             ps.setString(2, this.fecha_proyecto);
-            ps.setString(3, this.descripción);
+            ps.setString(3, this.descripcion);
             ps.setString(4, id);
             ps.executeUpdate();
             band = true;   
