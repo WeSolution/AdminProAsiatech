@@ -23,10 +23,13 @@ public class Admin extends javax.swing.JFrame {
      */
     public Admin() {
         initComponents();
+        df = DateFormat.getDateInstance();
         miVista = new Vista1();
         miProyecto = new Proyecto();
         miVista.llenarJTable(jtData, miProyecto.consulta());
         jdFechaProyecto.setDate(new Date());
+        txtIdProyecto.requestFocus();
+        txtIdProyecto.selectAll();
     }
 
     /**
@@ -61,6 +64,11 @@ public class Admin extends javax.swing.JFrame {
 
         jTabbedPane1.setName(""); // NOI18N
 
+        jtData = new javax.swing.JTable(){
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
+        };
         jtData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -82,15 +90,23 @@ public class Admin extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jtData.setFocusable(false);
         jScrollPane1.setViewportView(jtData);
 
         jLabel1.setText("Id del Proyecto:");
+
+        txtIdProyecto.setNextFocusableComponent(jdFechaProyecto);
 
         jLabel2.setText("Fecha del Proyecto:");
 
         jLabel3.setText("Descripción:");
 
+        txtDescripcionProyecto.setNextFocusableComponent(jButton1);
+
+        jdFechaProyecto.setNextFocusableComponent(txtDescripcionProyecto);
+
         jButton1.setText("Agregar proyecto");
+        jButton1.setNextFocusableComponent(jButton2);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -98,10 +114,18 @@ public class Admin extends javax.swing.JFrame {
         });
 
         jButton2.setText("Buscar proyecto");
+        jButton2.setNextFocusableComponent(jButton3);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Modificar proyecto");
+        jButton3.setNextFocusableComponent(jButton4);
 
         jButton4.setText("Eliminar proyecto");
+        jButton4.setNextFocusableComponent(txtIdProyecto);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -201,7 +225,7 @@ public class Admin extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Proyecto");
@@ -211,16 +235,14 @@ public class Admin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
             // TODO add your handling code here:
-            miProyecto = new Proyecto();
-            miVista = new Vista1();
-            df = DateFormat.getDateInstance();
-            if(!txtIdProyecto.getText().toLowerCase().trim().isEmpty() &&
+            
+            if(!txtIdProyecto.getText().toUpperCase().trim().isEmpty() &&
                     !df.format(jdFechaProyecto.getDate()).toString().trim().isEmpty() &&
                     !txtDescripcionProyecto.getText().toLowerCase().trim().isEmpty()) {
                 
-                miProyecto.setId(txtIdProyecto.getText().toLowerCase().trim());
+                miProyecto.setId(txtIdProyecto.getText().toUpperCase().trim());
                 miProyecto.setFecha_proyecto(df.format(jdFechaProyecto.getDate()).toString().toLowerCase().trim());
-                miProyecto.setDescripcion(txtDescripcionProyecto.getText().toLowerCase().trim());
+                miProyecto.setDescripcion(txtDescripcionProyecto.getText().toUpperCase().trim());
                 if(miProyecto.alta()) {
                     miVista.mensaje("Se agrego un nuevo proyecto.");
                     txtIdProyecto.setText("");
@@ -235,6 +257,19 @@ public class Admin extends javax.swing.JFrame {
             
             miVista.llenarJTable(jtData, miProyecto.consulta());
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String id_proyecto = null;
+        
+        if(jtData.getSelectedRow() > 0)
+            id_proyecto = jtData.getValueAt(jtData.getSelectedRow(), 0).toString();
+        else if(jtData.getSelectedRow() < 0 && !txtIdProyecto.getText().isEmpty() || !txtDescripcionProyecto.getText().isEmpty() )
+            miVista.mensaje("Buscqueda inteligente");
+        else
+            miVista.mensaje("Debes seleccionar un proyecto de la lista o buscar un proyecto por Id, Fecha o Descripción.");
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
