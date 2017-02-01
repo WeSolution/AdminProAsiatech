@@ -7,7 +7,11 @@ package JForms;
 
 import Vista.Vista1;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Proyecto;
 
 /**
@@ -16,7 +20,6 @@ import modelo.Proyecto;
  */
 public class Admin extends javax.swing.JFrame {
     private Vista1 miVista =  null;
-    private Proyecto miProyecto = null;
     private DateFormat df = null;
     /**
      * Creates new form Admin
@@ -25,7 +28,7 @@ public class Admin extends javax.swing.JFrame {
         initComponents();
         df = DateFormat.getDateInstance();
         miVista = new Vista1();
-        miProyecto = new Proyecto();
+        Proyecto miProyecto = new Proyecto();
         miVista.llenarJTable(jtData, miProyecto.consulta());
         jdFechaProyecto.setDate(new Date());
         txtIdProyecto.requestFocus();
@@ -235,7 +238,7 @@ public class Admin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
             // TODO add your handling code here:
-            
+            Proyecto miProyecto = new Proyecto();
             if(!txtIdProyecto.getText().toUpperCase().trim().isEmpty() &&
                     !df.format(jdFechaProyecto.getDate()).toString().trim().isEmpty() &&
                     !txtDescripcionProyecto.getText().toLowerCase().trim().isEmpty()) {
@@ -262,12 +265,27 @@ public class Admin extends javax.swing.JFrame {
         // TODO add your handling code here:
         String id_proyecto = null;
         
-        if(jtData.getSelectedRow() > 0)
+        if(jtData.getSelectedRow() >= 0){
             id_proyecto = jtData.getValueAt(jtData.getSelectedRow(), 0).toString();
-        else if(jtData.getSelectedRow() < 0 && !txtIdProyecto.getText().isEmpty() || !txtDescripcionProyecto.getText().isEmpty() )
-            miVista.mensaje("Buscqueda inteligente");
+            Proyecto miProyecto = new Proyecto();
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaDate = null;
+            miProyecto.setId(id_proyecto);
+            for (Proyecto pr : miProyecto.ver()) {
+                txtIdProyecto.setText(pr.getId());
+                try {
+                    fechaDate = formato.parse(pr.getFecha_proyecto());
+                    jdFechaProyecto.setDate(fechaDate);
+                } catch (ParseException ex) {
+                    miVista.mensaje("Error al convertir de String a Date: " + ex.getMessage());
+                }   
+                txtDescripcionProyecto.setText(pr.getDescripcion());
+            }
+        }
         else
-            miVista.mensaje("Debes seleccionar un proyecto de la lista o buscar un proyecto por Id, Fecha o Descripción.");
+            miVista.mensaje("¡Favor de seleccionar un prouyecto de la lista!");
+        
+        
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
