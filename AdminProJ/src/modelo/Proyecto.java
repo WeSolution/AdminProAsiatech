@@ -204,5 +204,38 @@ public class Proyecto implements ABCM{
     public boolean modifiacion(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-   
+
+    @Override
+    public List<Proyecto> consultaEspecial() {
+        List<Proyecto> p = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String query = "";
+        
+        try {
+            query = "SELECT * FROM proyecto WHERE proyecto.id like ? OR proyecto.fecha_proyecto like ? OR proyecto.descripcion like ?;";
+            p = new ArrayList();
+            con = miConexion.conectar();
+            ps = con.prepareStatement(query);
+            ps.setString(1,this.id);
+            ps.setString(2,this.fecha_proyecto);
+            ps.setString(3,this.descripcion);
+            
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                p.add(new Proyecto(rs.getString("id"), rs.getString("fecha_proyecto"), rs.getString("descripcion")));
+            }            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            try {
+                con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return p;
+    }
 }
