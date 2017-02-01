@@ -236,4 +236,9 @@ public class Elemento implements ABCM{
     }
     
     //Elemento
+
+    @Override
+    public List<?> consultaEspecial() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
