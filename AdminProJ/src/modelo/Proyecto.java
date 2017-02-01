@@ -117,7 +117,7 @@ public class Proyecto implements ABCM{
         String query = "";
         
         try {
-            query = "SELECT * FROM proyecto;";
+            query = "SELECT * FROM proyecto ORDER BY proyecto.fecha_proyecto;";
             p = new ArrayList();
             con = miConexion.conectar();
             ps = con.prepareStatement(query);
